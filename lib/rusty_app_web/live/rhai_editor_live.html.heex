@@ -1,0 +1,71 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Rhai Function Editor</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Function List -->
+    <div class="bg-gray-100 p-4 rounded-lg">
+      <h2 class="text-xl font-semibold mb-4">Functions</h2>
+      <ul>
+        <%= for function_name <- @functions do %>
+          <li class="mb-2">
+            <button phx-click="select_function" phx-value-name={function_name} class="text-blue-500 hover:text-blue-700">
+              <%= function_name %>
+            </button>
+          </li>
+        <% end %>
+      </ul>
+      <button phx-click="new_function" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+        New Function
+      </button>
+    </div>
+
+    <!-- Function Editor -->
+    <div class="col-span-2">
+      <%= if @current_function do %>
+        <form phx-submit="save_function" class="bg-white p-4 rounded-lg shadow">
+          <div class="mb-4">
+            <label for="function_name" class="block text-sm font-medium text-gray-700">Function Name</label>
+            <input type="text" id="function_name" name="name" value={@current_function.name} class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+          </div>
+          <div class="mb-4">
+            <label for="function_body" class="block text-sm font-medium text-gray-700">Function Body</label>
+            <textarea id="function_body" name="body" rows="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-mono"><%= @current_function.body %></textarea>
+          </div>
+          <div class="flex justify-between">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+              Save Function
+            </button>
+            <button type="button" phx-click="delete_function" phx-value-name={@current_function.name} class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+              Delete Function
+            </button>
+          </div>
+        </form>
+
+        <!-- Function Execution -->
+        <div class="mt-6 bg-white p-4 rounded-lg shadow">
+          <h3 class="text-lg font-semibold mb-2">Execute Function</h3>
+          <form phx-submit="execute_function" class="space-y-4">
+            <input type="hidden" name="name" value={@current_function.name} />
+            <div>
+              <label for="params" class="block text-sm font-medium text-gray-700">Parameters (comma-separated)</label>
+              <input type="text" id="params" name="params" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+            </div>
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+              Execute
+            </button>
+          </form>
+          <%= if @result do %>
+            <div class="mt-4">
+              <h4 class="text-md font-semibold">Result:</h4>
+              <pre class="bg-gray-100 p-2 rounded mt-2"><%= @result %></pre>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="bg-white p-4 rounded-lg shadow">
+          <p class="text-gray-600">Select a function from the list or create a new one to start editing.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
