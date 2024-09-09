@@ -3,7 +3,23 @@ defmodule RustyAppWeb.RhaiEditorLive do
   alias RustyApp.RhaiExecutor
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, code: "", params: "", result: nil)}
+    socket =
+    socket
+    |> assign(code: "", params: "", result: nil)
+    |> stream(:rust_functions, RustyApp.RustyFunction.list_rust_functions())
+
+   {:ok, socket}
+  end
+
+  def handle_event("get_function", %{"id" => id_str}, socket) do
+    function = RustyApp.RustyFunction.get_rusty_functions!(id_str)
+
+    socket =
+      socket
+      |> assign(code: function.body)
+      |> assign(params: function.params || "")
+
+    {:noreply, socket}
   end
 
   def handle_event("update_code", %{"code" => code}, socket) do
@@ -15,7 +31,6 @@ defmodule RustyAppWeb.RhaiEditorLive do
   end
 
   def handle_event("execute_rhai", _, socket) do
-    IO.inspect(socket.assigns, label: "assigns at execute")
 
     params =
       socket.assigns.params
@@ -27,9 +42,6 @@ defmodule RustyAppWeb.RhaiEditorLive do
           _ -> param
         end
       end)
-
-    IO.inspect(params, label: "params at execute")
-    IO.inspect(socket.assigns.code, label: "code at execute")
 
     result = RhaiExecutor.dyn_execute_rhai(socket.assigns.code, params)
     {:noreply, assign(socket, result: result)}

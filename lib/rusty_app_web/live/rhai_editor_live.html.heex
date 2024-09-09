@@ -1,26 +1,63 @@
-<div class="max-w-3xl mx-auto p-6 bg-gray-100 shadow-md rounded-lg">
-  <h1 class="text-3xl font-semibold mb-4 text-gray-800">Rhai Code Editor</h1>
+<div class="flex max-w-6xl mx-auto p-6 bg-gray-100 shadow-md rounded-lg">
+  <!-- Left side: Rhai Code Editor -->
+  <div class="w-3/4 pr-6">
+    <h1 class="text-3xl font-semibold mb-4 text-gray-800">Rhai Code Editor</h1>
+    
+    <form phx-submit="execute_rhai" class="space-y-6">
+      <div class="mb-6">
+        <h2 class="text-xl font-medium mb-2 text-gray-700">Code</h2>
+        <textarea name="code" phx-change="update_code" value={@code} class="w-full p-4 h-48 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"><%= @code %></textarea>
+      </div>
+      
+      <div class="mb-6">
+        <h2 class="text-xl font-medium mb-2 text-gray-700">Parameters</h2>
+        <input name="params" phx-change="update_params" value={@params} class="w-full p-4 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" />
+      </div>
+      
+      <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Execute
+      </button>
+    </form>
+    
+    <%= if @result do %>
+      <div class="mt-8">
+        <h2 class="text-xl font-medium mb-2 text-gray-700">Result</h2>
+        <pre class="p-4 bg-gray-800 text-white rounded-lg shadow-sm"><%= @result %></pre>
+      </div>
+    <% end %>
+  </div>
 
-  <form phx-submit="execute_rhai" class="space-y-6">
-    <div class="mb-6">
-      <h2 class="text-xl font-medium mb-2 text-gray-700">Code</h2>
-      <textarea name="code" phx-change="update_code" value={@code} class="w-full p-4 h-48 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"><%= @code %></textarea>
-    </div>
+  <!-- Right side: Rust Functions List -->
+  <div class="w-1/4 ml-6 border-l pl-6">
+  <h2 class="text-2xl font-semibold mb-4 text-gray-800">Listing Rust Functions</h2>
+  <div class="overflow-y-auto max-h-[calc(100vh-2rem)]">
+    <ul class="space-y-2">
+      <%= for {_id, rusty_functions} <- @streams.rust_functions do %>
+        <li class="flex items-center justify-between py-2 px-3 hover:bg-gray-100 rounded">
+          <span class="text-gray-700"><%= rusty_functions.name %></span>
+          <button
+            phx-click={JS.push("get_function", value: %{id: rusty_functions.id})}
+            data-confirm="Are you sure you want to assign this function to the editor?"
+            class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 border border-blue-600 rounded hover:bg-blue-100 transition duration-300"
+          >
+            Get
+          </button>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
 
-    <div class="mb-6">
-      <h2 class="text-xl font-medium mb-2 text-gray-700">Parameters</h2>
-      <input name="params" phx-change="update_params" value={@params} class="w-full p-4 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" />
-    </div>
-
-    <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      Execute
-    </button>
-  </form>
-
-  <%= if @result do %>
-    <div class="mt-8">
-      <h2 class="text-xl font-medium mb-2 text-gray-700">Result</h2>
-      <pre class="p-4 bg-gray-800 text-white rounded-lg shadow-sm"><%= @result %></pre>
-    </div>
+<div id="rusty_functions-modal" phx-modal={@live_action in [:new, :edit]}>
+  <%= if @live_action in [:new, :edit] do %>
+    <.live_component
+      module={RustyAppWeb.RustyFunctionsLive.FormComponent}
+      id={@rusty_functions.id || :new}
+      title={@page_title}
+      action={@live_action}
+      rusty_functions={@rusty_functions}
+      patch={~p"/rust_functions"}
+    />
   <% end %>
+</div>
 </div>

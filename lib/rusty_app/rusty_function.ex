@@ -18,7 +18,7 @@ defmodule RustyApp.RustyFunction do
 
   """
   def list_rust_functions do
-    Repo.all(RustyFunctions)
+    Repo.all(RustyFunctions, select: [:id, :name, :params, :body])
   end
 
   @doc """
