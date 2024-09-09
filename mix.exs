@@ -61,7 +61,7 @@ defmodule RustyApp.MixProject do
       {:bandit, "~> 1.5"},
 
       # NIF rust library
-      {:rustler, "~> 0.26.0"},
+      {:rustler, "~> 0.34.0"},
       {:redix, "~> 1.1"}
     ]
   end

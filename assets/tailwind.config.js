@@ -8,6 +8,7 @@ const path = require("path")
 module.exports = {
   content: [
     "./js/**/*.js",
+    './css/**/*.css',
     "../lib/rusty_app_web.ex",
     "../lib/rusty_app_web/**/*.*ex"
   ],

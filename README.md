@@ -16,3 +16,18 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+
+Check if Rust and Cargo are correctly installed on your system:
+`rustc --version`
+`cargo --version`
+
+If they are not installed, install them using the official Rust installer:
+`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+
+
+Ensure Correct Rust Version
+The Rustler library might require a specific version of Rust. You can ensure compatibility by using rustup to install the correct version of Rust:
+
+`rustup install stable`
+`rustup default stable`

@@ -42,3 +42,27 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+
+import { EditorState } from "@codemirror/state";
+import { EditorView, basicSetup } from "@codemirror/basic-setup";
+import { javascript } from "@codemirror/lang-javascript";
+import { oneDark } from "@codemirror/theme-one-dark";
+
+document.addEventListener("DOMContentLoaded", function() {
+  const editor = new EditorView({
+    state: EditorState.create({
+      doc: document.getElementById("rhai_script").value,
+      extensions: [basicSetup, javascript(), oneDark],
+    }),
+    parent: document.getElementById("rhai_script_container"),
+  });
+
+  // Update the textarea value on change
+  editor.dispatch({
+    effects: EditorView.updateListener.of(() => {
+      document.getElementById("rhai_script").value = editor.state.doc.toString();
+    })
+  });
+});
+
+

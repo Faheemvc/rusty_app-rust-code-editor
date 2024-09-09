@@ -3,7 +3,14 @@ defmodule RustyApp.RhaiFunctions do
 
   def execute_function(name, params) do
     with {:ok, body} <- RedisStore.get_function(name) do
-      RustyApp.RhaiRustler.execute_rhai(body, params)
+      RustyApp.RhaiExecutor.dyn_execute_rhai(body, params)
+    end
+  end
+
+  def get_function(name) do
+    case RedisStore.get_function(name) do
+      {:ok, function} -> {:ok, function}
+      {:error, reason} -> {:error, reason}
     end
   end
 

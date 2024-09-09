@@ -17,7 +17,9 @@ defmodule RustyApp.Application do
       # Start a worker by calling: RustyApp.Worker.start_link(arg)
       # {RustyApp.Worker, arg},
       # Start to serve requests, typically the last entry
-      RustyAppWeb.Endpoint
+      RustyAppWeb.Endpoint,
+
+      {Redix, {redis_url(), redis_opts()}}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -32,5 +34,18 @@ defmodule RustyApp.Application do
   def config_change(changed, _new, removed) do
     RustyAppWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp redis_url do
+    System.get_env("REDIS_URL") || "redis://localhost:6379"
+  end
+
+  defp redis_opts do
+    [
+      name: :redix,
+      password: System.get_env("REDIS_PASSWORD"),
+      socket_opts: [:inet6],
+      timeout: 5000
+    ]
   end
 end

@@ -14,10 +14,15 @@
           </li>
         <% end %>
       </ul>
-      <button phx-click="new_function" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+      <button phx-click="create_function" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
         New Function
       </button>
     </div>
+
+   <!-- Include this in your HTML -->
+<div id="rhai_script_container"></div>
+<textarea id="rhai_script" style="display:none;">/* Your initial script here */</textarea>
+
 
     <!-- Function Editor -->
     <div class="col-span-2">
@@ -31,6 +36,11 @@
             <label for="function_body" class="block text-sm font-medium text-gray-700">Function Body</label>
             <textarea id="function_body" name="body" rows="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-mono"><%= @current_function.body %></textarea>
           </div>
+          
+          <div class="mb-4">
+          <textarea id="rhai_script" name="rhai_script" rows="10" cols="50"></textarea>
+          </div>
+
           <div class="flex justify-between">
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
               Save Function

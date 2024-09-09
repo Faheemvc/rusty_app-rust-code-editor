@@ -36,6 +36,13 @@ if config_env() == :prod do
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
 
+  # In your config.exs or runtime.exs
+  config :rusty_app, :redix,
+    host: "localhost",
+    port: 6379,
+    password: System.get_env("REDIS_PASSWORD")
+
+
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
   # want to use a different value for prod and you most likely don't want
