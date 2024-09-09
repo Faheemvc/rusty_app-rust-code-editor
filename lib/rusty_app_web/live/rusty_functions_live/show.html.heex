@@ -1,0 +1,28 @@
+<.header>
+  Rusty functions <%= @rusty_functions.id %>
+  <:subtitle>This is a rusty_functions record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/rust_functions/#{@rusty_functions}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit rusty_functions</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @rusty_functions.name %></:item>
+  <:item title="Body"><%= @rusty_functions.body %></:item>
+  <:item title="Params"><%= @rusty_functions.params %></:item>
+</.list>
+
+<.back navigate={~p"/rust_functions"}>Back to rust_functions</.back>
+
+<.modal :if={@live_action == :edit} id="rusty_functions-modal" show on_cancel={JS.patch(~p"/rust_functions/#{@rusty_functions}")}>
+  <.live_component
+    module={RustyAppWeb.RustyFunctionsLive.FormComponent}
+    id={@rusty_functions.id}
+    title={@page_title}
+    action={@live_action}
+    rusty_functions={@rusty_functions}
+    patch={~p"/rust_functions/#{@rusty_functions}"}
+  />
+</.modal>

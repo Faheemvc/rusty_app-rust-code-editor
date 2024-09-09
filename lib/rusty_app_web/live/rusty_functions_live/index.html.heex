@@ -1,0 +1,43 @@
+<.header>
+  Listing Rust functions
+  <:actions>
+    <.link patch={~p"/rust_functions/new"}>
+      <.button>New Rusty functions</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="rust_functions"
+  rows={@streams.rust_functions}
+  row_click={fn {_id, rusty_functions} -> JS.navigate(~p"/rust_functions/#{rusty_functions}") end}
+>
+  <:col :let={{_id, rusty_functions}} label="Name"><%= rusty_functions.name %></:col>
+  <:col :let={{_id, rusty_functions}} label="Body"><%= rusty_functions.body %></:col>
+  <:col :let={{_id, rusty_functions}} label="Params"><%= rusty_functions.params %></:col>
+  <:action :let={{_id, rusty_functions}}>
+    <div class="sr-only">
+      <.link navigate={~p"/rust_functions/#{rusty_functions}"}>Show</.link>
+    </div>
+    <.link patch={~p"/rust_functions/#{rusty_functions}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, rusty_functions}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: rusty_functions.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="rusty_functions-modal" show on_cancel={JS.patch(~p"/rust_functions")}>
+  <.live_component
+    module={RustyAppWeb.RustyFunctionsLive.FormComponent}
+    id={@rusty_functions.id || :new}
+    title={@page_title}
+    action={@live_action}
+    rusty_functions={@rusty_functions}
+    patch={~p"/rust_functions"}
+  />
+</.modal>

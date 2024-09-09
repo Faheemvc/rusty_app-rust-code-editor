@@ -17,9 +17,15 @@ defmodule RustyAppWeb.Router do
   scope "/", RustyAppWeb do
     pipe_through :browser
 
-    # get "/", PageController, :home
-
     live "/", RhaiEditorLive
+
+    live "/rust_functions", RustyFunctionsLive.Index, :index
+    live "/rust_functions/new", RustyFunctionsLive.Index, :new
+    live "/rust_functions/:id/edit", RustyFunctionsLive.Index, :edit
+
+    live "/rust_functions/:id", RustyFunctionsLive.Show, :show
+    live "/rust_functions/:id/show/edit", RustyFunctionsLive.Show, :edit
+
   end
 
   # Other scopes may use custom stacks.
