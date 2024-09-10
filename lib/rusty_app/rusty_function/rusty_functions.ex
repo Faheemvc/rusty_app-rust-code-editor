@@ -4,7 +4,7 @@ defmodule RustyApp.RustyFunction.RustyFunctions do
 
   schema "rust_functions" do
     field :name, :string
-    field :params, :map
+    field :params, :string
     field :body, :string
 
     timestamps(type: :utc_datetime)
@@ -14,6 +14,6 @@ defmodule RustyApp.RustyFunction.RustyFunctions do
   def changeset(rusty_functions, attrs) do
     rusty_functions
     |> cast(attrs, [:name, :body, :params])
-    |> validate_required([:name, :body])
+    |> validate_required([:name, :body, :params])
   end
 end

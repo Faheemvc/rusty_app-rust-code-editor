@@ -1,44 +1,60 @@
-<div class="flex max-w-6xl mx-auto p-6 bg-gray-100 shadow-md rounded-lg">
+<div class="flex flex-col lg:flex-row max-w-6xl mx-auto p-6 bg-gray-50 shadow-md rounded-lg">
   <!-- Left side: Rhai Code Editor -->
-  <div class="w-3/4 pr-6">
-    <h1 class="text-3xl font-semibold mb-4 text-gray-800">Rhai Code Editor</h1>
+  <div class="lg:w-2/3 pr-0 lg:pr-6">
+    <h1 class="text-4xl font-semibold mb-6 text-gray-900">Rhai Code Editor</h1>
     
     <form phx-submit="execute_rhai" class="space-y-6">
-      <div class="mb-6">
-        <h2 class="text-xl font-medium mb-2 text-gray-700">Code</h2>
+      <div>
+        <h2 class="text-lg font-medium mb-2 text-gray-800">Code</h2>
         <textarea name="code" phx-change="update_code" value={@code} class="w-full p-4 h-48 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"><%= @code %></textarea>
       </div>
       
-      <div class="mb-6">
-        <h2 class="text-xl font-medium mb-2 text-gray-700">Parameters</h2>
+      <div>
+        <h2 class="text-lg font-medium mb-2 text-gray-800">Parameters</h2>
         <input name="params" phx-change="update_params" value={@params} class="w-full p-4 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" />
       </div>
       
-      <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <div class="flex space-x-4">
+
+      <button type="submit" class="w-full lg:w-auto px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
         Execute
       </button>
+
+      <button type="button" phx-click="clear_editor" class="px-6 py-3 bg-red-600 text-white font-medium rounded-lg shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+        Clear
+      </button>
+
+      </div>
     </form>
     
     <%= if @result do %>
       <div class="mt-8">
-        <h2 class="text-xl font-medium mb-2 text-gray-700">Result</h2>
-        <pre class="p-4 bg-gray-800 text-white rounded-lg shadow-sm"><%= @result %></pre>
+        <h2 class="text-lg font-medium mb-2 text-gray-800">Result</h2>
+        <pre class="p-4 bg-gray-900 text-white rounded-lg shadow-sm"><%= @result %></pre>
       </div>
     <% end %>
   </div>
 
   <!-- Right side: Rust Functions List -->
-  <div class="w-1/4 ml-6 border-l pl-6">
-  <h2 class="text-2xl font-semibold mb-4 text-gray-800">Listing Rust Functions</h2>
-  <div class="overflow-y-auto max-h-[calc(100vh-2rem)]">
-    <ul class="space-y-2">
+  <div class="lg:w-1/3 mt-6 lg:mt-0">
+  <h2 class="text-2xl font-semibold mb-4 text-gray-800 text-center">Listing Rust Functions</h2>
+
+  <div class="bg-white p-4 shadow-lg rounded-lg border border-gray-200 max-h-[calc(100vh-6rem)] overflow-y-auto">
+    <!-- Create Function Button -->
+    <div class="mb-4">
+      <a href="http://localhost:4000/rust_functions" class="px-6 py-3 bg-green-600 text-white font-medium rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+        Create Function
+      </a>
+    </div>
+
+    <ul class="space-y-4">
       <%= for {_id, rusty_functions} <- @streams.rust_functions do %>
-        <li class="flex items-center justify-between py-2 px-3 hover:bg-gray-100 rounded">
-          <span class="text-gray-700"><%= rusty_functions.name %></span>
+        <li class="flex justify-between items-center p-3 bg-gray-50 hover:bg-gray-100 rounded-lg shadow-sm">
+          <span class="font-medium text-gray-700"><%= rusty_functions.name %></span>
           <button
             phx-click={JS.push("get_function", value: %{id: rusty_functions.id})}
             data-confirm="Are you sure you want to assign this function to the editor?"
-            class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 border border-blue-600 rounded hover:bg-blue-100 transition duration-300"
+            class="px-4 py-2 text-sm text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             Get
           </button>
@@ -48,16 +64,5 @@
   </div>
 </div>
 
-<div id="rusty_functions-modal" phx-modal={@live_action in [:new, :edit]}>
-  <%= if @live_action in [:new, :edit] do %>
-    <.live_component
-      module={RustyAppWeb.RustyFunctionsLive.FormComponent}
-      id={@rusty_functions.id || :new}
-      title={@page_title}
-      action={@live_action}
-      rusty_functions={@rusty_functions}
-      patch={~p"/rust_functions"}
-    />
-  <% end %>
-</div>
+
 </div>

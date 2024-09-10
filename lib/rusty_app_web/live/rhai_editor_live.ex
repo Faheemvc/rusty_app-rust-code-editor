@@ -18,6 +18,7 @@ defmodule RustyAppWeb.RhaiEditorLive do
       socket
       |> assign(code: function.body)
       |> assign(params: function.params || "")
+      |> stream(:rust_functions, RustyApp.RustyFunction.list_rust_functions())
 
     {:noreply, socket}
   end
@@ -43,7 +44,19 @@ defmodule RustyAppWeb.RhaiEditorLive do
         end
       end)
 
+    socket = stream(socket, :rust_functions, RustyApp.RustyFunction.list_rust_functions())
     result = RhaiExecutor.dyn_execute_rhai(socket.assigns.code, params)
+    
     {:noreply, assign(socket, result: result)}
+  end
+
+  def handle_event("clear_editor", _, socket) do
+    socket =
+      socket
+      |> assign(code: "")
+      |> assign(params: "")
+      |> stream(:rust_functions, RustyApp.RustyFunction.list_rust_functions())
+
+    {:noreply, socket}
   end
 end
