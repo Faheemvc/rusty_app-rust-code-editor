@@ -20,8 +20,8 @@ defmodule RustyAppWeb.RustyFunctionsLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:body]} type="text" label="Body" />
-        <%!-- <.input field={@form[:params]} type="text" label="Params" /> --%>
+        <.input field={@form[:body]} type="textarea" label="Body" />
+        <.input field={@form[:params]} type="text" label="Params" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Rusty functions</.button>
         </:actions>
@@ -32,6 +32,7 @@ defmodule RustyAppWeb.RustyFunctionsLive.FormComponent do
 
   @impl true
   def update(%{rusty_functions: rusty_functions} = assigns, socket) do
+    IO.inspect assigns, label: "assigned at form component"
     {:ok,
      socket
      |> assign(assigns)
