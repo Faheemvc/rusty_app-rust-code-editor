@@ -2,6 +2,8 @@
 
 ![alt text](image.png)
 
+This is rhai rust code editor build by using phoenixframework, implementation of NIF in phoenix. 
+
 To start your Phoenix server:
 
 - Run `mix setup` to install and setup dependencies
