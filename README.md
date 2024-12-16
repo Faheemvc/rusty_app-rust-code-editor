@@ -31,3 +31,6 @@ The Rustler library might require a specific version of Rust. You can ensure com
 
 `rustup install stable`
 `rustup default stable`
+
+
+so lets explore....
